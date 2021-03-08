@@ -37,7 +37,7 @@ func onConnect() {
 }
 
 // Triggered when tick is recevived
-func onTick(tick kiteticker.Tick) {
+func onTick(tick ...kiteticker.Tick) {
 	fmt.Println("Tick: ", tick)
 }
 
