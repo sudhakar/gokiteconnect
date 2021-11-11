@@ -44,8 +44,8 @@ func onConnect() {
 }
 
 // Triggered when tick is recevived
-func onTick(tick kitemodels.Tick) {
-	fmt.Println("Tick: ", tick)
+func onTick(ticks ...kitemodels.Tick) {
+	fmt.Println("Ticks: ", ticks)
 }
 
 // Triggered when reconnection is attempted which is enabled by default

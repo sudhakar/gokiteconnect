@@ -43,7 +43,7 @@ type Ticker struct {
 
 // callbacks represents callbacks available in ticker.
 type callbacks struct {
-	onTick        func(models.Tick)
+	onTick        func(...models.Tick)
 	onMessage     func(int, []byte)
 	onNoReconnect func(int)
 	onReconnect   func(int, time.Duration)
@@ -219,7 +219,7 @@ func (t *Ticker) OnNoReconnect(f func(attempt int)) {
 }
 
 // OnTick callback.
-func (t *Ticker) OnTick(f func(tick models.Tick)) {
+func (t *Ticker) OnTick(f func(ticks ...models.Tick)) {
 	t.callbacks.onTick = f
 }
 
@@ -376,9 +376,9 @@ func (t *Ticker) triggerMessage(messageType int, message []byte) {
 	}
 }
 
-func (t *Ticker) triggerTick(tick models.Tick) {
+func (t *Ticker) triggerTick(ticks ...models.Tick) {
 	if t.callbacks.onTick != nil {
-		t.callbacks.onTick(tick)
+		t.callbacks.onTick(ticks...)
 	}
 }
 
@@ -443,10 +443,7 @@ func (t *Ticker) readMessage(ctx context.Context, wg *sync.WaitGroup) {
 					t.triggerError(fmt.Errorf("Error parsing data received: %v", err))
 				}
 
-				// Trigger individual tick.
-				for _, tick := range ticks {
-					t.triggerTick(tick)
-				}
+				t.triggerTick(ticks...)
 			} else if mType == websocket.TextMessage {
 				t.processTextMessage(msg)
 			}
