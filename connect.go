@@ -25,10 +25,11 @@ type Client struct {
 
 const (
 	name           string        = "gokiteconnect"
-	version        string        = "3.0.0"
+	version        string        = "4.0.2"
 	requestTimeout time.Duration = 7000 * time.Millisecond
 	baseURI        string        = "https://api.kite.trade"
 	loginURI       string        = "https://kite.trade/connect/login?api_key=%s&v=3"
+	kiteBaseURI    string        = "https://kite.zerodha.com"
 	// Kite connect header version
 	kiteHeaderVersion string = "3"
 )
@@ -58,6 +59,10 @@ const (
 	ValidityDay = "DAY"
 	ValidityIOC = "IOC"
 
+	// Position Type
+	PositionTypeDay       = "day"
+	PositionTypeOvernight = "overnight"
+
 	// Transaction type
 	TransactionTypeBuy  = "BUY"
 	TransactionTypeSell = "SELL"
@@ -69,6 +74,7 @@ const (
 	ExchangeNFO = "NFO"
 	ExchangeBFO = "BFO"
 	ExchangeCDS = "CDS"
+	ExchangeBCD = "BCD"
 
 	// Margins segments
 	MarginsEquity    = "equity"
@@ -97,11 +103,13 @@ const (
 	URIModifyOrder     string = "/orders/%s/%s"     // "/orders/{variety}/{order_id}"
 	URICancelOrder     string = "/orders/%s/%s"     // "/orders/{variety}/{order_id}"
 
-	URIGetPositions    string = "/portfolio/positions"
-	URIGetHoldings     string = "/portfolio/holdings"
-	URIConvertPosition string = "/portfolio/positions"
+	URIGetPositions     string = "/portfolio/positions"
+	URIGetHoldings      string = "/portfolio/holdings"
+	URIInitHoldingsAuth string = "/portfolio/holdings/authorise"
+	URIConvertPosition  string = "/portfolio/positions"
 
-	URIOrderMargins string = "/margins/orders"
+	URIOrderMargins  string = "/margins/orders"
+	URIBasketMargins string = "/margins/basket"
 
 	// MF endpoints
 	URIGetMFOrders      string = "/mf/orders"

@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"net/http"
 	"net/url"
+
+	"github.com/zerodha/gokiteconnect/v4/models"
 )
 
 // UserSession represents the response after a successful authentication.
@@ -12,9 +14,9 @@ type UserSession struct {
 	UserProfile
 	UserSessionTokens
 
-	APIKey      string `json:"api_key"`
-	PublicToken string `json:"public_token"`
-	LoginTime   Time   `json:"login_time"`
+	APIKey      string      `json:"api_key"`
+	PublicToken string      `json:"public_token"`
+	LoginTime   models.Time `json:"login_time"`
 }
 
 // UserSessionTokens represents response after renew access token.
@@ -31,15 +33,21 @@ type Bank struct {
 	Account string `json:"account"`
 }
 
+// UserMeta contains meta data of the user.
+type UserMeta struct {
+	DematConsent string `json:"demat_consent"`
+}
+
 // UserProfile represents a user's personal and financial profile.
 type UserProfile struct {
+	UserID        string   `json:"user_id"`
 	UserName      string   `json:"user_name"`
 	UserShortName string   `json:"user_shortname"`
 	AvatarURL     string   `json:"avatar_url"`
 	UserType      string   `json:"user_type"`
 	Email         string   `json:"email"`
-	Phone         string   `json:"phone"`
 	Broker        string   `json:"broker"`
+	Meta          UserMeta `json:"meta"`
 	Products      []string `json:"products"`
 	OrderTypes    []string `json:"order_types"`
 	Exchanges     []string `json:"exchanges"`
@@ -56,23 +64,28 @@ type Margins struct {
 
 // AvailableMargins represents the available margins from the margins response for a single segment.
 type AvailableMargins struct {
-	AdHocMargin   float64 `json:"adhoc_margin"`
-	Cash          float64 `json:"cash"`
-	Collateral    float64 `json:"collateral"`
-	IntradayPayin float64 `json:"intraday_payin"`
+	AdHocMargin    float64 `json:"adhoc_margin"`
+	Cash           float64 `json:"cash"`
+	Collateral     float64 `json:"collateral"`
+	IntradayPayin  float64 `json:"intraday_payin"`
+	LiveBalance    float64 `json:"live_balance"`
+	OpeningBalance float64 `json:"opening_balance"`
 }
 
 // UsedMargins represents the used margins from the margins response for a single segment.
 type UsedMargins struct {
-	Debits        float64 `json:"debits"`
-	Exposure      float64 `json:"exposure"`
-	M2MRealised   float64 `json:"m2m_realised"`
-	M2MUnrealised float64 `json:"m2m_unrealised"`
-	OptionPremium float64 `json:"option_premium"`
-	Payout        float64 `json:"payout"`
-	Span          float64 `json:"span"`
-	HoldingSales  float64 `json:"holding_sales"`
-	Turnover      float64 `json:"turnover"`
+	Debits           float64 `json:"debits"`
+	Exposure         float64 `json:"exposure"`
+	M2MRealised      float64 `json:"m2m_realised"`
+	M2MUnrealised    float64 `json:"m2m_unrealised"`
+	OptionPremium    float64 `json:"option_premium"`
+	Payout           float64 `json:"payout"`
+	Span             float64 `json:"span"`
+	HoldingSales     float64 `json:"holding_sales"`
+	Turnover         float64 `json:"turnover"`
+	LiquidCollateral float64 `json:"liquid_collateral"`
+	StockCollateral  float64 `json:"stock_collateral"`
+	Delivery         float64 `json:"delivery"`
 }
 
 // AllMargins contains both equity and commodity margins.

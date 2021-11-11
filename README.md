@@ -7,17 +7,17 @@ to build a complete investment and trading platform. Execute orders in real
 time, manage user portfolio, stream live market data (WebSockets), and more,
 with the simple HTTP API collection.
 
-Zerodha Technology (c) 2018. Licensed under the MIT License.
+Zerodha Technology (c) 2021. Licensed under the MIT License.
 
 ## Documentation
 
-- [Client API documentation - GoDoc](https://godoc.org/github.com/zerodhatech/gokiteconnect)
+- [Client API documentation - GoDoc](https://godoc.org/github.com/zerodha/gokiteconnect)
 - [Kite Connect HTTP API documentation](https://kite.trade/docs/connect/v3)
 
 ## Installation
 
 ```
-go get github.com/zerodhatech/gokiteconnect/v3
+go get github.com/zerodha/gokiteconnect/v4
 ```
 
 ## API usage
@@ -28,7 +28,7 @@ package main
 import (
 	"fmt"
 
-	kiteconnect "github.com/zerodhatech/gokiteconnect/v3"
+	kiteconnect "github.com/zerodha/gokiteconnect/v4"
 )
 
 const (
@@ -74,8 +74,9 @@ import (
 	"fmt"
 	"time"
 
-	kiteconnect "github.com/zerodhatech/gokiteconnect/v3"
-	"github.com/zerodhatech/gokiteconnect/v3/ticker"
+	kiteconnect "github.com/zerodha/gokiteconnect/v4"
+	kitemodels "github.com/zerodha/gokiteconnect/v4/models"
+	kiteticker "github.com/zerodha/gokiteconnect/v4/ticker"
 )
 
 var (
@@ -102,7 +103,7 @@ func onConnect() {
 }
 
 // Triggered when tick is recevived
-func onTick(tick kiteticker.Tick) {
+func onTick(tick kitemodels.Tick) {
 	fmt.Println("Tick: ", tick)
 }
 
@@ -142,9 +143,9 @@ func main() {
 }
 ```
 
-# Examples
+## Examples
 
-Check [examples folder](https://github.com/zerodhatech/gokiteconnect/tree/master/examples) for more examples.
+Check [examples folder](https://github.com/zerodha/gokiteconnect/tree/master/examples) for more examples.
 
 You can run the following after updating the API Keys in the examples:
 
@@ -152,13 +153,18 @@ You can run the following after updating the API Keys in the examples:
 go run examples/connect/basic/connect.go
 ```
 
-## Run unit tests
+## Development
+
+#### Fetch mock responses for testcases
+
+This needs to be run initially
+
+```
+git submodule update --init --recursive
+```
+
+#### Run unit tests
 
 ```
 go test -v
 ```
-
-## Changelog
-
-[Check CHANGELOG.md](CHANGELOG.md)
-

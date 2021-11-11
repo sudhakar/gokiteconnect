@@ -4,8 +4,9 @@ import (
 	"fmt"
 	"time"
 
-	kiteconnect "github.com/zerodhatech/gokiteconnect/v3"
-	kiteticker "github.com/zerodhatech/gokiteconnect/v3/ticker"
+	kiteconnect "github.com/zerodha/gokiteconnect/v4"
+	kitemodels "github.com/zerodha/gokiteconnect/v4/models"
+	kiteticker "github.com/zerodha/gokiteconnect/v4/ticker"
 )
 
 const (
@@ -34,10 +35,16 @@ func onConnect() {
 	if err != nil {
 		fmt.Println("err: ", err)
 	}
+	// Set subscription mode for given list of tokens
+	// Default mode is Quote
+	err = ticker.SetMode(kiteticker.ModeFull, []uint32{53718535})
+	if err != nil {
+		fmt.Println("err: ", err)
+	}
 }
 
 // Triggered when tick is recevived
-func onTick(tick ...kiteticker.Tick) {
+func onTick(tick kitemodels.Tick) {
 	fmt.Println("Tick: ", tick)
 }
 

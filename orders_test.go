@@ -1,7 +1,10 @@
 package kiteconnect
 
 import (
+	"encoding/json"
 	"testing"
+
+	"github.com/stretchr/testify/require"
 )
 
 func (ts *TestSuite) TestGetOrders(t *testing.T) {
@@ -10,11 +13,16 @@ func (ts *TestSuite) TestGetOrders(t *testing.T) {
 	if err != nil {
 		t.Errorf("Error while fetching orders. %v", err)
 	}
-	for _, order := range orders {
-		if order.OrderID == "" {
-			t.Errorf("Error while fetching order id in orders. %v", err)
+	t.Run("test empty/unparsed orders", func(t *testing.T) {
+		for _, order := range orders {
+			require.NotEqual(t, "", order.OrderID)
 		}
-	}
+	})
+	t.Run("test tag parsing", func(t *testing.T) {
+		require.Equal(t, "", orders[0].Tag)
+		require.Equal(t, "connect test order1", orders[3].Tag)
+		require.Equal(t, []string{"connect test order2", "XXXXX"}, orders[4].Tags)
+	})
 }
 
 func (ts *TestSuite) TestGetTrades(t *testing.T) {
@@ -133,5 +141,30 @@ func (ts *TestSuite) TestExitOrder(t *testing.T) {
 	}
 	if orderResponse.OrderID == "" {
 		t.Errorf("No order id returned. Error %v", err)
+	}
+}
+
+func (ts *TestSuite) TestIssue64(t *testing.T) {
+	t.Parallel()
+	orders, err := ts.KiteConnect.GetOrders()
+	if err != nil {
+		t.Errorf("Error while fetching orders. %v", err)
+	}
+
+	// Check if marshal followed by unmarshall correctly parses timestamps
+	ord := orders[0]
+	js, err := json.Marshal(ord)
+	if err != nil {
+		t.Errorf("Error while marshalling order. %v", err)
+	}
+
+	var outOrd Order
+	err = json.Unmarshal(js, &outOrd)
+	if err != nil {
+		t.Errorf("Error while unmarshalling order. %v", err)
+	}
+
+	if !ord.ExchangeTimestamp.Equal(outOrd.ExchangeTimestamp.Time) {
+		t.Errorf("Incorrect timestamp parsing.\nwant:\t%v\ngot:\t%v", ord.ExchangeTimestamp, outOrd.ExchangeTimestamp)
 	}
 }
